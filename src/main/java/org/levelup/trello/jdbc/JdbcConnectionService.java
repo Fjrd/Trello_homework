@@ -1,9 +1,5 @@
 package org.levelup.trello.jdbc;
 
-import org.levelup.trello.profiling.AliveTime;
-import org.levelup.trello.profiling.OpenConnectionServiceInvocationHandler;
-
-import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -14,7 +10,7 @@ import java.sql.SQLException;
  *
  * DriverManager - управляет всеми драйверами в приложении
  */
-public class JdbcConnectionService implements ConnectionService {
+public class JdbcConnectionService {
 
     // Ручная загрузка драйвера в память и регистрация его в DriverManager
     static {
@@ -25,27 +21,10 @@ public class JdbcConnectionService implements ConnectionService {
         }
     }
 
-    public static ConnectionService buildJdbcConnectionService() {
-        // SomeInterface
-        //  doSmth();
-
-        // A, ProxyS, S
-        // A использует внутри себя класс S
-        // A думает, что использует S, но на самом деле работает через ProxyS
-        // A -> ProxyS -> S
-        return (ConnectionService) Proxy.newProxyInstance(
-                JdbcConnectionService.class.getClassLoader(), // класслоадер который загрузил наш класс
-                JdbcConnectionService.class.getInterfaces(), // список интерфейсов, которые наш класс реализует
-                new OpenConnectionServiceInvocationHandler(new JdbcConnectionService()) // перехватчик вызовов методов
-        );
-    }
-
     /**
      * Open new connection to database
      * @return connection
      */
-    @AliveTime
-    @Override
     public Connection openConnection() throws SQLException {
         // getConnection(String url, String username, String password)
         // URL:
