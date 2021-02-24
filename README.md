@@ -2,7 +2,7 @@
 Homework application performed as part of the java dev course from LevelUp:
 https://levelp.ru/courses/programmirovanie/basics-of-programming-in-the-java-language-level-2/
 
-![db diagram](db_diagram.png)
+Maven, Git, Mysql, plain JDBC
 
 Tasks:
 
