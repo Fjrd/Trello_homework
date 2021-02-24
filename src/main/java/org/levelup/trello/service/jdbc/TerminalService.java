@@ -1,6 +1,7 @@
 package org.levelup.trello.service.jdbc;
 
 import lombok.SneakyThrows;
+import org.levelup.trello.model.User;
 import org.levelup.trello.service.UserService;
 
 import java.io.BufferedReader;
@@ -29,6 +30,7 @@ public class TerminalService {
                 }
                 case("log in"):{
                     signIn();
+                    break;
                 }
             }
         }
@@ -39,12 +41,21 @@ public class TerminalService {
         String login;
         String password;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("login:");
+        System.out.println();
+        System.out.println("Insert your login:");
         login = br.readLine();
-        System.out.println("password:");
+        System.out.println("Insert your password:");
         password = br.readLine();
-        if (userService.signIn(login, password))
+        Integer userId = userService.signIn(login, password);
+        if (userId != 0)
             System.out.println("User found! Now you can manage you boards!");
+            boardList(userId);
+    }
+
+    private void boardList(Integer id) {
+        User user = userService.showUser(id);
+        System.out.println("board list:");
+
     }
 
     public void printAllUsers(){
@@ -71,7 +82,6 @@ public class TerminalService {
             password = br.readLine();
 
             userService.createUser(name, login, email, password);
-            System.out.println("User creation success");
 
         } catch (IOException e) {
             System.out.println("Wrong value, try again");

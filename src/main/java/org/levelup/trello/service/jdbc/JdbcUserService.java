@@ -39,13 +39,19 @@ public class JdbcUserService implements UserService {
 
             saveUserCredentials(connection, generatedID, password);
 
+            System.out.println("user creation success!");
             return new User(generatedID, login, email, name);
 
-        } catch (SQLException e) {
+        }
+        catch (SQLIntegrityConstraintViolationException e){
+            System.out.println("User with this login already exists");
+        }
+        catch (SQLException e) {
             System.out.println("Ошибка при работе с базой");
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+        return null;
     }
 
     @Override
@@ -70,6 +76,22 @@ public class JdbcUserService implements UserService {
     }
 
     @SneakyThrows
+    @Override
+    public User showUser(Integer id) {
+        PreparedStatement ps = connection.prepareStatement("select * from users where id = ?");
+        ps.setString(1, String.valueOf(id));
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()){
+            String name = rs.getString(2);
+            String login = rs.getString(3);
+            String email = rs.getString(4);
+            return new User(id, name, login, email);
+        }
+        else
+            return null;
+    }
+
+    @SneakyThrows
     private void saveUserCredentials(Connection connection, Integer userId, String password){
         PreparedStatement stmt = connection.prepareStatement("insert into user_credentials values (?, ?)");
         stmt.setInt(1, userId);
@@ -78,8 +100,8 @@ public class JdbcUserService implements UserService {
     }
 
     @SneakyThrows
-    public boolean signIn(String login, String password){
-       PreparedStatement ps = connection.prepareStatement("SELECT login, password " +
+    public Integer signIn(String login, String password){
+       PreparedStatement ps = connection.prepareStatement("SELECT id, login, password " +
                "from user_credentials a " +
                "inner join users b " +
                "on a.user_id = b.id " +
@@ -89,10 +111,10 @@ public class JdbcUserService implements UserService {
        ResultSet rs = ps.executeQuery();
        if (rs.next() == false){
            System.out.println("wrong login or password");
-           return false;
+           return 0;
        }
        else {
-           return true;
+           return rs.getInt(1);
        }
     }
 }

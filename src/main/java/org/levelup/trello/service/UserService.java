@@ -7,5 +7,7 @@ import java.util.ArrayList;
 public interface UserService {
     User createUser(String name, String login, String email, String password);
     ArrayList<User> showAllUsers();
-    boolean signIn(String login, String password);
+    User showUser(Integer id);
+    Integer signIn(String login, String password);
+
 }
