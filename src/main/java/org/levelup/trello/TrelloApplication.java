@@ -1,7 +1,7 @@
 package org.levelup.trello;
 
 import org.levelup.trello.service.jdbc.JdbcUserService;
-import org.levelup.trello.service.jdbc.TerminalService;
+import org.levelup.trello.service.TerminalService;
 
 
 import java.io.IOException;
