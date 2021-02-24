@@ -1,4 +1,4 @@
-package org.levelup.trello.jdbc;
+package org.levelup.trello.service.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

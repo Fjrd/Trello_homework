@@ -1,10 +1,13 @@
 # Trello_homework
-Homework application performed as part of the java dev course from LevelUp:
+Homework Trello analogue console application 
+performed as part of the java dev course from LevelUp:
+
 https://levelp.ru/courses/programmirovanie/basics-of-programming-in-the-java-language-level-2/
 
-![db diagram](db_diagram.png)
+Maven, Git, Mysql, plain JDBC
 
 Tasks:
+
 1.Подумайте, пожалуйста, на схемой базы данных trello: какие таблицы в ней могут быть, какие колонки в таблицах, какие ограничения можно наложить на колонки, а также связи между таблицами.
 Список таблиц с занятия:
     users
@@ -30,3 +33,5 @@ Tasks:
 1. Добавить доску
 2. Изменить доску
    и так далее. 
+
+![db diagram](db_diagram.png)
