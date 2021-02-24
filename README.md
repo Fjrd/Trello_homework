@@ -2,6 +2,8 @@
 Homework application performed as part of the java dev course from LevelUp:
 https://levelp.ru/courses/programmirovanie/basics-of-programming-in-the-java-language-level-2/
 
+Maven, Git, Mysql, plain JDBC
+
 Tasks:
 
 1.Подумайте, пожалуйста, на схемой базы данных trello: какие таблицы в ней могут быть, какие колонки в таблицах, какие ограничения можно наложить на колонки, а также связи между таблицами.
