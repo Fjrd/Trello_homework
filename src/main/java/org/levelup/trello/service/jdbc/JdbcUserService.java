@@ -14,9 +14,10 @@ public class JdbcUserService implements UserService {
     }
 
     @Override
-    public User createUser(String login, String email, String name, String password) {
+    public User createUser(String name, String login, String email, String password) {
+
         try (Connection connection = jdbcConnectionService.openConnection()){
-            String sql = "insert into users (id, login, email, name) values (nextval('user_id_sequence')?, ?, ?)";
+            String sql = "insert into users (id, name, login, email) values (nextval('user_id_sequence')?, ?, ?)";
             PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, login);
             stmt.setString(2, email);
