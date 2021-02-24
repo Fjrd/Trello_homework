@@ -1,4 +1,4 @@
-package org.levelup.trello.jdbc;
+package org.levelup.trello.service.jdbc;
 
 import org.levelup.trello.profiling.AliveTime;
 import org.levelup.trello.profiling.OpenConnectionServiceInvocationHandler;
