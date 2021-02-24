@@ -10,18 +10,35 @@ import java.io.InputStreamReader;
 public class TrelloApplication {
 
     public static void main(String[] args) throws IOException {
-        BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("log");
-        String login = consoleReader.readLine();
-        System.out.println("email");
-        String email = consoleReader.readLine();
-        System.out.println("name");
-        String name = consoleReader.readLine();
-        System.out.println("pass");
-        String password = consoleReader.readLine();
+        signUp();
+    }
 
+    public static void signUp(){
+        System.out.println("SignUp:");
+        String name, login, email, password;
         UserService userService = new JdbcUserService();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        userService.createUser(login,email,name, password);
+        try {
+            System.out.println("Insert your name:");
+            name = br.readLine();
+
+            System.out.println("Insert your login:");
+            login = br.readLine();
+
+            System.out.println("Insert your email:");
+            email = br.readLine();
+
+            System.out.println("Insert your password:");
+            password = br.readLine();
+
+            userService.createUser(name, login, email, password);
+
+        } catch (IOException e) {
+            System.out.println("some IO exception");
+            e.printStackTrace();
+        }
+
+
     }
 }

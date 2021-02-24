@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class JdbcConnectionService {
     public Connection openConnection() throws SQLException {
-        //jdbc:mysql://localhost:3306/trello
+        //TODO add property file
         return DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/trello",
                 "fjrd",
