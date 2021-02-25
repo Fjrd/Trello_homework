@@ -21,7 +21,7 @@ public class JdbcUserService implements UserService {
     }
 
     @Override
-    public User createUser(String name, String login, String email, String password) {
+    public User addNewUser(String name, String login, String email, String password) {
 
         try (Connection connection = jdbcConnectionService.openConnection()){
 
@@ -30,23 +30,27 @@ public class JdbcUserService implements UserService {
             stmt.setString(1, name);
             stmt.setString(2, login);
             stmt.setString(3, email);
+            stmt.executeUpdate();
 
-            int rowAffected = stmt.executeUpdate();
-            System.out.println(rowAffected + " row affected");
 
             ResultSet keys = stmt.getGeneratedKeys();
             keys.next();
-            int generatedID = keys.getInt(1);
+            int generatedUserId = keys.getInt(1);
 
-            saveUserCredentials(connection, generatedID, password);
+            saveUserCredentials(connection, generatedUserId, password);
 
-            return new User(generatedID, login, email, name);
+            return new User(generatedUserId, login, email, name);
 
-        } catch (SQLException e) {
-            System.out.println("Ошибка при работе с базой");
+        }
+        catch (SQLIntegrityConstraintViolationException e){
+            System.out.println("User with this login already exists");
+        }
+        catch (SQLException e) {
+            System.out.println("Database exception");
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+        return null;
     }
 
     @Override
@@ -71,6 +75,22 @@ public class JdbcUserService implements UserService {
     }
 
     @SneakyThrows
+    @Override
+    public User showUserById(Integer id) {
+        PreparedStatement ps = connection.prepareStatement("select * from users where id = ?");
+        ps.setString(1, String.valueOf(id));
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()){
+            String name = rs.getString(2);
+            String login = rs.getString(3);
+            String email = rs.getString(4);
+            return new User(id, name, login, email);
+        }
+        else
+            return null;
+    }
+
+    @SneakyThrows
     private void saveUserCredentials(Connection connection, Integer userId, String password){
         PreparedStatement stmt = connection.prepareStatement("insert into user_credentials values (?, ?)");
         stmt.setInt(1, userId);
@@ -79,8 +99,8 @@ public class JdbcUserService implements UserService {
     }
 
     @SneakyThrows
-    public boolean signIn(String login, String password){
-       PreparedStatement ps = connection.prepareStatement("SELECT login, password " +
+    public User verifyUser(String login, String password){
+       PreparedStatement ps = connection.prepareStatement("SELECT id, name, login, email " +
                "from user_credentials a " +
                "inner join users b " +
                "on a.user_id = b.id " +
@@ -88,55 +108,11 @@ public class JdbcUserService implements UserService {
        ps.setString(1, login);
        ps.setString(2, password);
        ResultSet rs = ps.executeQuery();
-       if (rs.next() == false){
-           System.out.println("wrong login or password");
-           return false;
-       }
-       else {
-           return true;
-       }
+       if (rs.next() == true)
+           return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
+       else
+           return null;
     }
 
-    @SneakyThrows
-    @Override
-    public ArrayList<Board> showAllUserBoards(Integer userId) {
-        ArrayList<Board> boardList = new ArrayList<>();
-        PreparedStatement ps = connection.prepareStatement("select * from boards where owner_id = ?");
-        ps.setInt(1, userId);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()){
-            Integer id = rs.getInt(1);
-            String name = rs.getString(2);
-            Boolean favourite = rs.getBoolean(3);
-            Integer ownerId = rs.getInt(4);
-            Board board = new Board(id, name, favourite, ownerId);
-            boardList.add(board);
-        }
-        return boardList;
-    }
 
-    @SneakyThrows
-    @Override
-    public void deleteBoard(Integer id) {
-        PreparedStatement ps = connection.prepareStatement("delete from board where id = ?");
-        ps.setInt(1, id);
-        ps.executeUpdate();
-    }
-
-    @Override
-    public Board editBoard(Integer id) {
-        return null;
-    }
-
-    @SneakyThrows
-    @Override
-    public Board addNewBoard(String name, Boolean favourite, Integer userId) {
-
-        PreparedStatement ps = connection.prepareStatement("insert into boards values (?,?,?)");
-        ps.setString(1, name);
-        ps.setBoolean(2, favourite);
-        ps.setInt(3, userId);
-        ps.executeUpdate();
-        return null;
-    }
 }
