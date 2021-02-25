@@ -1,5 +1,6 @@
 package org.levelup.trello.service.jdbc;
 import lombok.SneakyThrows;
+import org.levelup.trello.model.Board;
 import org.levelup.trello.model.User;
 import org.levelup.trello.service.UserService;
 
@@ -116,5 +117,48 @@ public class JdbcUserService implements UserService {
        else {
            return rs.getInt(1);
        }
+    }
+
+    @SneakyThrows
+    @Override
+    public ArrayList<Board> showAllUserBoards(Integer userId) {
+        ArrayList<Board> boardList = new ArrayList<>();
+        PreparedStatement ps = connection.prepareStatement("select * from boards where owner_id = ?");
+        ps.setInt(1, userId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()){
+            Integer id = rs.getInt(1);
+            String name = rs.getString(2);
+            Boolean favourite = rs.getBoolean(3);
+            Integer ownerId = rs.getInt(4);
+            Board board = new Board(id, name, favourite, ownerId);
+            boardList.add(board);
+        }
+        return boardList;
+    }
+
+    @SneakyThrows
+    @Override
+    public void deleteBoard(Integer id) {
+        PreparedStatement ps = connection.prepareStatement("delete from board where id = ?");
+        ps.setInt(1, id);
+        ps.executeUpdate();
+    }
+
+    @Override
+    public Board editBoard(Integer id) {
+        return null;
+    }
+
+    @SneakyThrows
+    @Override
+    public Board addNewBoard(String name, Boolean favourite, Integer userId) {
+
+        PreparedStatement ps = connection.prepareStatement("insert into boards values (?,?,?)");
+        ps.setString(1, name);
+        ps.setBoolean(2, favourite);
+        ps.setInt(3, userId);
+        ps.executeUpdate();
+        return null;
     }
 }
