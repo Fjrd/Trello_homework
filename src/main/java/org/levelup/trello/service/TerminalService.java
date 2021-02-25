@@ -127,6 +127,7 @@ public class TerminalService {
             for (Board board : boards) {
                 System.out.println(board.toString());
             }
+            System.out.println();
         }
         else{
             System.out.println("Empty :( You haven't added any boards yet");
@@ -139,8 +140,8 @@ public class TerminalService {
         System.out.println("Board name:");
         String name = br.readLine();
         System.out.println("Is this your favourite board? Type \"true\" or \"false\"");
-        Boolean favourite = Boolean.valueOf(br.readLine());
-        boardService.addNewBoard(name, favourite, user.getId());
+        Boolean isFavourite = Boolean.valueOf(br.readLine());
+        boardService.addNewBoard(name, isFavourite, user.getId());
     }
 
     //TODO array index out of bound
@@ -152,7 +153,7 @@ public class TerminalService {
             System.out.println(i+1 + " - " + boards.get(i).toString());
         }
         System.out.println("Which board do you want to remove?");
-        boardService.editBoard(boards.get(Integer.parseInt(br.readLine())).getId());
+        boardService.deleteBoard(boards.get(Integer.parseInt(br.readLine())).getId());
         printUserBoards();
 
     }
@@ -166,7 +167,12 @@ public class TerminalService {
             System.out.println(i+1 + " - " + boards.get(i).toString());
         }
         System.out.println("Which board do you want edit?");
-        boardService.editBoard(boards.get(Integer.parseInt(br.readLine())).getId());
+        Board board = boards.get(Integer.parseInt(br.readLine()));
+        System.out.println("Insert new name");
+        String newName = br.readLine();
+        System.out.println("Is this your favourite board? Type \"true\" or \"false\"");
+        Boolean isFavourite = Boolean.valueOf(br.readLine());
+        boardService.editBoard(board.getId(), newName, isFavourite);
         printUserBoards();
     }
 }

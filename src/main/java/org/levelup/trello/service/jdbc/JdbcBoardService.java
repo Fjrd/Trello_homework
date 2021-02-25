@@ -50,8 +50,14 @@ public class JdbcBoardService implements BoardService {
         return null;
     }
 
+    @SneakyThrows
     @Override
-    public Board editBoard(Integer id) {
+    public Board editBoard(Integer id, String name, Boolean favourite) {
+        PreparedStatement ps = connection.prepareStatement("update boards set name = ?, favourite = ? where id = ?");
+        ps.setString(1, name);
+        ps.setBoolean(2, favourite);
+        ps.setInt(3, id);
+        ps.executeUpdate();
         return null;
     }
 
