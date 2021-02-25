@@ -46,7 +46,7 @@ public class TerminalService {
                     chooseCommand(command);
                 }
             }
-            catch (ArrayIndexOutOfBoundsException e){
+            catch (IndexOutOfBoundsException e){
                 System.out.println("Invalid command. Try again");
             }
         }
@@ -148,31 +148,40 @@ public class TerminalService {
     //TODO refactoring - code dupl
     @SneakyThrows
     private void deleteBoard() {
-        List<Board> boards = boardService.showUserBoards(user.getId());
-        for (int i = 0; i < boards.size(); i++) {
-            System.out.println(i+1 + " - " + boards.get(i).toString());
+        try {
+            List<Board> boards = boardService.showUserBoards(user.getId());
+            for (int i = 0; i < boards.size(); i++) {
+                System.out.println(i+1 + " - " + boards.get(i).toString());
+            }
+            System.out.println("Which board do you want to remove?");
+            boardService.deleteBoard(boards.get(Integer.parseInt(br.readLine())).getId());
+            printUserBoards();
         }
-        System.out.println("Which board do you want to remove?");
-        boardService.deleteBoard(boards.get(Integer.parseInt(br.readLine())).getId());
-        printUserBoards();
-
+        catch (IndexOutOfBoundsException e){
+            System.out.println("Invalid command. Try again");
+        }
     }
 
     //TODO array index out of bounds
     //TODO refactoring - code dupl
     @SneakyThrows
     private void editBoard(){
-        List<Board> boards = boardService.showUserBoards(user.getId());
-        for (int i = 0; i < boards.size(); i++) {
-            System.out.println(i+1 + " - " + boards.get(i).toString());
+        try {
+            List<Board> boards = boardService.showUserBoards(user.getId());
+            for (int i = 0; i < boards.size(); i++) {
+                System.out.println(i+1 + " - " + boards.get(i).toString());
+            }
+            System.out.println("Which board do you want edit?");
+            Board board = boards.get(Integer.parseInt(br.readLine()));
+            System.out.println("Insert new name");
+            String newName = br.readLine();
+            System.out.println("Is this your favourite board? Type \"true\" or \"false\"");
+            Boolean isFavourite = Boolean.valueOf(br.readLine());
+            boardService.editBoard(board.getId(), newName, isFavourite);
+            printUserBoards();
         }
-        System.out.println("Which board do you want edit?");
-        Board board = boards.get(Integer.parseInt(br.readLine()));
-        System.out.println("Insert new name");
-        String newName = br.readLine();
-        System.out.println("Is this your favourite board? Type \"true\" or \"false\"");
-        Boolean isFavourite = Boolean.valueOf(br.readLine());
-        boardService.editBoard(board.getId(), newName, isFavourite);
-        printUserBoards();
+        catch (IndexOutOfBoundsException e){
+            System.out.println("Invalid command. Try again");
+        }
     }
 }
