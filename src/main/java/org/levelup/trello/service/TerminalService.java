@@ -30,21 +30,25 @@ public class TerminalService {
     }
 
     @SneakyThrows
-    public String menu(String title, List<String> list) {
+    public void menu(String title, List<String> list) {
         System.out.println(title);
         for (int i = 0; i < list.size(); i++) {
             System.out.println(i+1 + " - " + list.get(i));
         }
         System.out.println();
         while (true) {
-            //TODO handle java.lang.ArrayIndexOutOfBoundsException
-            Integer num = Integer.parseInt(br.readLine());
-            String command = list.get(num-1);
-            if (command != null){
-                System.out.println(command);
-                chooseCommand(command);
+            Integer num;
+            try{
+                num = Integer.parseInt(br.readLine());
+                String command = list.get(num-1);
+                if (command != null){
+                    System.out.println(command);
+                    chooseCommand(command);
+                }
             }
-
+            catch (ArrayIndexOutOfBoundsException e){
+                System.out.println("Invalid command. Try again");
+            }
         }
     }
 
@@ -89,7 +93,6 @@ public class TerminalService {
     }
 
     public void signUp(){
-
         try {
             System.out.println("Insert your name:");
             String name = br.readLine();

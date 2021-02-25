@@ -10,9 +10,4 @@ public interface UserService {
     ArrayList<User> showAllUsers();
     User showUserById(Integer id);
     User verifyUser(String login, String password);
-
-    //TODO move to BoardService
-
-
-
 }
