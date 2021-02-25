@@ -13,7 +13,7 @@ public class TerminalService {
 
     List<String> mainMenu = List.of("sign in", "sign up", "exit");
     List<String> userMenu = List.of("boards", "back to start", "exit");
-    List<String> boardsMenu = List.of("boards list", "add board" /*, "edit board"*/, "delete board", "back to start", "exit");
+    List<String> boardsMenu = List.of("boards list", "add board", "edit board", "delete board", "back to start", "exit");
     //List<String> allCommands = Stream.of(mainMenu, userMenu, boardsMenu).flatMap(Collection::stream).collect(Collectors.toList());
     private UserService userService;
     private BoardService boardService;
@@ -71,6 +71,11 @@ public class TerminalService {
             case "delete board" : {
                 deleteBoard();
                 menu("Boards manager", boardsMenu);
+            }
+            case "edit board" : {
+                editBoard();
+                menu("Boards manager", boardsMenu);
+
             }
         }
     }
@@ -138,15 +143,30 @@ public class TerminalService {
         boardService.addNewBoard(name, favourite, user.getId());
     }
 
+    //TODO array index out of bound
+    //TODO refactoring - code dupl
     @SneakyThrows
     private void deleteBoard() {
-        List boards = boardService.showUserBoards(user.getId());
+        List<Board> boards = boardService.showUserBoards(user.getId());
         for (int i = 0; i < boards.size(); i++) {
             System.out.println(i+1 + " - " + boards.get(i).toString());
         }
-        System.out.println("which board do you want to remove?");
-        boardService.deleteBoard(Integer.parseInt(br.readLine()));
+        System.out.println("Which board do you want to remove?");
+        boardService.editBoard(boards.get(Integer.parseInt(br.readLine())).getId());
         printUserBoards();
 
+    }
+
+    //TODO array index out of bounds
+    //TODO refactoring - code dupl
+    @SneakyThrows
+    private void editBoard(){
+        List<Board> boards = boardService.showUserBoards(user.getId());
+        for (int i = 0; i < boards.size(); i++) {
+            System.out.println(i+1 + " - " + boards.get(i).toString());
+        }
+        System.out.println("Which board do you want edit?");
+        boardService.editBoard(boards.get(Integer.parseInt(br.readLine())).getId());
+        printUserBoards();
     }
 }
