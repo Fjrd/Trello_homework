@@ -6,11 +6,13 @@ import org.levelup.trello.model.User;
 import java.util.ArrayList;
 
 public interface UserService {
-    User createUser(String name, String login, String email, String password);
+    User addNewUser(String name, String login, String email, String password);
     ArrayList<User> showAllUsers();
-    User showUser(Integer id);
-    Integer signIn(String login, String password);
-    ArrayList<Board> showAllUserBoards(Integer userId);
+    User showUserById(Integer id);
+    User verifyUser(String login, String password);
+
+    //TODO move to BoardService
+    ArrayList<Board> showUserBoards(Integer userId);
     void deleteBoard(Integer id);
     Board editBoard(Integer id);
     Board addNewBoard(String name, Boolean favourite, Integer userId);

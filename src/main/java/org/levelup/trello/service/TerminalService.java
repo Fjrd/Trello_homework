@@ -52,10 +52,20 @@ public class TerminalService {
             case "sign up" : signUp();
             case "back to start" : startUp();
             case "exit": System.exit(0);
-            case "boards" :
-       /*   case "boards list" : printUserBoards();
-            case "add board" : addNewBoard();
-            case "delete board" : deleteBoard();*/
+            case "boards" : menu("Boards manager", boardsMenu);
+            case "boards list" : {
+                printUserBoards();
+                menu("Boards manager", boardsMenu);
+            }
+            case "add board" : {
+                addNewBoard();
+                printUserBoards();
+                menu("Boards manager", boardsMenu);
+            }
+            case "delete board" : {
+                deleteBoard();
+                menu("Boards manager", boardsMenu);
+            }
         }
     }
 
@@ -65,12 +75,15 @@ public class TerminalService {
         String login = br.readLine();
         System.out.println("Insert your password:");
         String password = br.readLine();
-        /*Integer userId = userService.signIn(login, password);
-        if (userId != 0)
-            userMenu(userId);*/
-        user = userService.signIn(login, password);
-        if (user != null)
+        user = userService.verifyUser(login, password);
+        if (user != null) {
+            System.out.println("Welcome " + user.getName() + "!");
             menu("User menu:", userMenu);
+        }
+        else{
+            System.out.println("Wrong login or password, try again.");
+            signIn();
+        }
     }
 
     public void signUp(){
@@ -88,33 +101,41 @@ public class TerminalService {
             System.out.println("Insert your password:");
             String password = br.readLine();
 
-            userService.createUser(name, login, email, password);
+            userService.addNewUser(name, login, email, password);
 
         } catch (IOException e) {
             System.out.println("Wrong value, try again.");
             signUp();
         }
+        System.out.println("User created successfully");
+        signIn();
     }
 
-    private void deleteBoard(User user) {
-        System.out.println("which board do you want to remove?");
-
+    private void printUserBoards() {
+        System.out.println("Your boards list:");
+        for (Board board : userService.showUserBoards(user.getId())) {
+            System.out.println(board.toString());
+        }
     }
 
     @SneakyThrows
-    private void addNewBoard(User user) {
-        System.out.println("New board:");
+    private void addNewBoard() {
+        System.out.println("Board name:");
         String name = br.readLine();
+        System.out.println("Is this your favourite board? Type \"true\" or \"false\"");
         Boolean favourite = Boolean.valueOf(br.readLine());
-        Integer userId = user.getId();
-        userService.addNewBoard(name, favourite, userId);
+        userService.addNewBoard(name, favourite, user.getId());
     }
 
-    private void printUserBoards(User user) {
-        System.out.println("This is all your boards:");
-        for (Board board : userService.showAllUserBoards(user.getId())) {
-            System.out.println(board.toString());
+    @SneakyThrows
+    private void deleteBoard() {
+        List boards = userService.showUserBoards(user.getId());
+        for (int i = 0; i < boards.size(); i++) {
+            System.out.println(i+1 + " - " + boards.get(i).toString());
         }
+        System.out.println("which board do you want to remove?");
+        userService.deleteBoard(Integer.parseInt(br.readLine()));
+        printUserBoards();
 
     }
 }
