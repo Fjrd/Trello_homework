@@ -1,15 +1,21 @@
 package org.levelup.trello.service.jdbc;
 
+import lombok.SneakyThrows;
+
+import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class JdbcConnectionService {
+    @SneakyThrows
     public Connection openConnection() throws SQLException {
-        //TODO add property file
-        return DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/trello",
-                "fjrd",
-                "fjrd");
+        Properties properties = new Properties();
+        properties.load(new FileInputStream("src/main/resources/application.properties"));
+        String url = properties.getProperty("url");
+        String username = properties.getProperty("username");
+        String password = properties.getProperty("password");
+        return DriverManager.getConnection(url, username, password);
     }
 }
