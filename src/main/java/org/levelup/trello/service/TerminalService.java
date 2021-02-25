@@ -7,114 +7,92 @@ import org.levelup.trello.model.User;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 public class TerminalService {
 
+    List<String> mainMenu = List.of("sign in", "sign up", "exit");
+    List<String> userMenu = List.of("boards", "back to start", "exit");
+    List<String> boardsMenu = List.of("boards list", "add board" /*, "edit board"*/, "delete board", "back to start", "exit");
+    //List<String> allCommands = Stream.of(mainMenu, userMenu, boardsMenu).flatMap(Collection::stream).collect(Collectors.toList());
     private UserService userService;
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    User user;
 
     public TerminalService(UserService userService) {
         this.userService = userService;
     }
 
-    @SneakyThrows
     public void startUp(){
-        System.out.println("Welcome!");
-        System.out.println("1 - log in");
-        System.out.println("2 - sign up");
-        System.out.println("3 - help");
-        System.out.println("4 - exit");
-        while (true){
-            int command = Integer.parseInt(br.readLine());
-            switch (command){
-                case 1 : signIn();
-                    break;
-                case 2 : signUp();
-                    break;
-                case 3 : startUp();
-                    break;
-                case 4 : System.exit(0);
-                    break;
+        menu("Main menu. Please log in or Sign in:", mainMenu);
+    }
+
+    @SneakyThrows
+    public String menu(String title, List<String> list) {
+        System.out.println(title);
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println(i+1 + " - " + list.get(i));
+        }
+        System.out.println();
+        while (true) {
+            //TODO handle java.lang.ArrayIndexOutOfBoundsException
+            Integer num = Integer.parseInt(br.readLine());
+            String command = list.get(num-1);
+            if (command != null){
+                System.out.println(command);
+                chooseCommand(command);
             }
+
+        }
+    }
+
+    public void chooseCommand(String command){
+        switch (command){
+            case "sign in" : signIn();
+            case "sign up" : signUp();
+            case "back to start" : startUp();
+            case "exit": System.exit(0);
+            case "boards" :
+       /*   case "boards list" : printUserBoards();
+            case "add board" : addNewBoard();
+            case "delete board" : deleteBoard();*/
         }
     }
 
     @SneakyThrows
     private void signIn() {
-        String login;
-        String password;
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println();
         System.out.println("Insert your login:");
-        login = br.readLine();
+        String login = br.readLine();
         System.out.println("Insert your password:");
-        password = br.readLine();
-        Integer userId = userService.signIn(login, password);
+        String password = br.readLine();
+        /*Integer userId = userService.signIn(login, password);
         if (userId != 0)
-            userMenu(userId);
+            userMenu(userId);*/
+        user = userService.signIn(login, password);
+        if (user != null)
+            menu("User menu:", userMenu);
     }
 
     public void signUp(){
-        String name, login, email, password;
 
         try {
-            System.out.println("Create new user:");
-
             System.out.println("Insert your name:");
-            name = br.readLine();
+            String name = br.readLine();
 
             System.out.println("Insert your login:");
-            login = br.readLine();
+            String login = br.readLine();
 
             System.out.println("Insert your email:");
-            email = br.readLine();
+            String email = br.readLine();
 
             System.out.println("Insert your password:");
-            password = br.readLine();
+            String password = br.readLine();
 
             userService.createUser(name, login, email, password);
 
         } catch (IOException e) {
-            System.out.println("Wrong value, try again");
+            System.out.println("Wrong value, try again.");
             signUp();
-        }
-    }
-
-    @SneakyThrows
-    private void userMenu(Integer id) {
-        User user = userService.showUser(id);
-        System.out.println("User found! Now you can manage your boards!");
-        System.out.println("1 - Manage your boards");
-        System.out.println("2 - Exit");
-        while (true){
-            int command = Integer.parseInt(br.readLine());
-            switch (command){
-                case 1 : manageBoards(user);
-                    break;
-                case 2 : startUp();
-                    break;
-            }
-        }
-    }
-
-    @SneakyThrows
-    private void manageBoards(User user) {
-        System.out.println("1 - Show board list");
-        System.out.println("2 - Add new board");
-        System.out.println("3 - Edit board");
-        System.out.println("4 - Delete board");
-        while (true){
-            int command = Integer.parseInt(br.readLine());
-            switch (command){
-                case 1 : printUserBoards(user);
-                    break;
-                case 2 : addNewBoard(user);
-                    break;
-                case 3 :
-                    break;
-                case 4 : deleteBoard(user);
-                    break;
-            }
         }
     }
 
@@ -139,10 +117,4 @@ public class TerminalService {
         }
 
     }
-
-    public void printAllUsers(){
-        userService.showAllUsers().forEach(System.out::println);
-    }
-
-
 }
