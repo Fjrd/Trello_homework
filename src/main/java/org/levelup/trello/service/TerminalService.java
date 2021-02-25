@@ -16,15 +16,17 @@ public class TerminalService {
     List<String> boardsMenu = List.of("boards list", "add board" /*, "edit board"*/, "delete board", "back to start", "exit");
     //List<String> allCommands = Stream.of(mainMenu, userMenu, boardsMenu).flatMap(Collection::stream).collect(Collectors.toList());
     private UserService userService;
+    private BoardService boardService;
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     User user;
 
-    public TerminalService(UserService userService) {
+    public TerminalService(UserService userService, BoardService boardService) {
         this.userService = userService;
+        this.boardService = boardService;
     }
 
     public void startUp(){
-        menu("Main menu. Please log in or Sign in:", mainMenu);
+        menu("Main menu. Please log in or Sign up:", mainMenu);
     }
 
     @SneakyThrows
@@ -112,9 +114,15 @@ public class TerminalService {
     }
 
     private void printUserBoards() {
-        System.out.println("Your boards list:");
-        for (Board board : userService.showUserBoards(user.getId())) {
-            System.out.println(board.toString());
+        List<Board> boards = boardService.showUserBoards(user.getId());
+        if (boards.size()>0){
+            for (Board board : boards) {
+                System.out.println(board.toString());
+            }
+        }
+        else{
+            System.out.println("Empty :( You haven't added any boards yet");
+            System.out.println();
         }
     }
 
@@ -124,17 +132,17 @@ public class TerminalService {
         String name = br.readLine();
         System.out.println("Is this your favourite board? Type \"true\" or \"false\"");
         Boolean favourite = Boolean.valueOf(br.readLine());
-        userService.addNewBoard(name, favourite, user.getId());
+        boardService.addNewBoard(name, favourite, user.getId());
     }
 
     @SneakyThrows
     private void deleteBoard() {
-        List boards = userService.showUserBoards(user.getId());
+        List boards = boardService.showUserBoards(user.getId());
         for (int i = 0; i < boards.size(); i++) {
             System.out.println(i+1 + " - " + boards.get(i).toString());
         }
         System.out.println("which board do you want to remove?");
-        userService.deleteBoard(Integer.parseInt(br.readLine()));
+        boardService.deleteBoard(Integer.parseInt(br.readLine()));
         printUserBoards();
 
     }

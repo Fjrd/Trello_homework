@@ -114,48 +114,5 @@ public class JdbcUserService implements UserService {
            return null;
     }
 
-    @SneakyThrows
-    @Override
-    public ArrayList<Board> showUserBoards(Integer userId) {
-        ArrayList<Board> boardList = new ArrayList<>();
-        PreparedStatement ps = connection.prepareStatement("select * from boards where owner_id = ?");
-        ps.setInt(1, userId);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()){
-            Integer id = rs.getInt(1);
-            String name = rs.getString(2);
-            Boolean favourite = rs.getBoolean(3);
-            Integer ownerId = rs.getInt(4);
-            Board board = new Board(id, name, favourite, ownerId);
-            boardList.add(board);
-        }
-        return boardList;
-    }
 
-
-    @SneakyThrows
-    @Override
-    public Board addNewBoard(String name, Boolean favourite, Integer userId) {
-        PreparedStatement ps = connection.prepareStatement("insert into boards (name, favourite, owner_id) values (?,?,?)");
-        ps.setString(1, name);
-        ps.setBoolean(2, favourite);
-        ps.setInt(3, userId);
-        ps.executeUpdate();
-        return null;
-    }
-
-    @Override
-    public Board editBoard(Integer id) {
-        return null;
-    }
-
-
-
-    @SneakyThrows
-    @Override
-    public void deleteBoard(Integer id) {
-        PreparedStatement ps = connection.prepareStatement("delete from boards where id = ?");
-        ps.setInt(1, id);
-        ps.executeUpdate();
-    }
 }

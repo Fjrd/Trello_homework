@@ -12,10 +12,7 @@ public interface UserService {
     User verifyUser(String login, String password);
 
     //TODO move to BoardService
-    ArrayList<Board> showUserBoards(Integer userId);
-    void deleteBoard(Integer id);
-    Board editBoard(Integer id);
-    Board addNewBoard(String name, Boolean favourite, Integer userId);
+
 
 
 }
