@@ -1,6 +1,7 @@
 package org.levelup.trello.service.jdbc;
 
 import lombok.SneakyThrows;
+import org.levelup.trello.jdbc.ConnectionService;
 import org.levelup.trello.jdbc.JdbcConnectionService;
 import org.levelup.trello.model.User;
 import org.levelup.trello.service.UserService;
@@ -22,10 +23,11 @@ public class JdbcUserService implements UserService {
 
     // final - означает, что поле является константным - его нельзя изменить после присвоения значения
     // присвоение значения обязано происходить сразу же (либо в конструкторе)
-    private final JdbcConnectionService jdbcConnectionService;
+    private final ConnectionService jdbcConnectionService;
 
     public JdbcUserService() {
-        this.jdbcConnectionService = new JdbcConnectionService();
+//        this.jdbcConnectionService = new JdbcConnectionService();
+        this.jdbcConnectionService = JdbcConnectionService.buildJdbcConnectionService();
     }
 
     // conn.createStatement("into users (login, name, email) values (" + login + ", " + name + " + password + ")")

@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 
 public class TrelloApplication {
 
+    // SOLID
     public static void main(String[] args) throws IOException {
 
         BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));

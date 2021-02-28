@@ -2,13 +2,11 @@ package org.levelup.trello.model;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 //@Data
-@Getter
-@Setter
+//@Getter
+//@Setter
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
