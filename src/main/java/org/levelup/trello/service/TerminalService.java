@@ -14,9 +14,8 @@ public class TerminalService {
     List<String> mainMenu = List.of("sign in", "sign up", "exit");
     List<String> userMenu = List.of("boards", "back to start", "exit");
     List<String> boardsMenu = List.of("boards list", "add board", "edit board", "delete board", "back to start", "exit");
-    //List<String> allCommands = Stream.of(mainMenu, userMenu, boardsMenu).flatMap(Collection::stream).collect(Collectors.toList());
-    private UserService userService;
-    private BoardService boardService;
+    private final UserService userService;
+    private final BoardService boardService;
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     User user;
 
@@ -144,8 +143,7 @@ public class TerminalService {
         boardService.addNewBoard(name, isFavourite, user.getId());
     }
 
-    //TODO array index out of bound
-    //TODO refactoring - code dupl
+    //TODO refactoring
     @SneakyThrows
     private void deleteBoard() {
         try {
@@ -162,8 +160,7 @@ public class TerminalService {
         }
     }
 
-    //TODO array index out of bounds
-    //TODO refactoring - code dupl
+    //TODO refactoring
     @SneakyThrows
     private void editBoard(){
         try {

@@ -1,7 +1,7 @@
 package org.levelup.trello;
 
-import org.levelup.trello.service.jdbc.JdbcBoardService;
-import org.levelup.trello.service.jdbc.JdbcUserService;
+import org.levelup.trello.jdbc.JdbcBoardService;
+import org.levelup.trello.jdbc.JdbcUserService;
 import org.levelup.trello.service.TerminalService;
 
 
