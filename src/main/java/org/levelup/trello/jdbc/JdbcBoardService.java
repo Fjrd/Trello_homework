@@ -1,4 +1,4 @@
-package org.levelup.trello.service.jdbc;
+package org.levelup.trello.jdbc;
 
 import lombok.SneakyThrows;
 import org.levelup.trello.model.Board;

@@ -1,13 +1,10 @@
-package org.levelup.trello.service.jdbc;
+package org.levelup.trello.jdbc;
 import lombok.SneakyThrows;
-import org.levelup.trello.model.Board;
 import org.levelup.trello.model.User;
 import org.levelup.trello.service.UserService;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
 
 public class JdbcUserService implements UserService {
 

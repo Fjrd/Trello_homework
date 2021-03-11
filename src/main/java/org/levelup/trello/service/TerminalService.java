@@ -13,10 +13,9 @@ public class TerminalService {
 
     List<String> mainMenu = List.of("sign in", "sign up", "exit");
     List<String> userMenu = List.of("boards", "back to start", "exit");
-    List<String> boardsMenu = List.of("boards list", "add board" /*, "edit board"*/, "delete board", "back to start", "exit");
-    //List<String> allCommands = Stream.of(mainMenu, userMenu, boardsMenu).flatMap(Collection::stream).collect(Collectors.toList());
-    private UserService userService;
-    private BoardService boardService;
+    List<String> boardsMenu = List.of("boards list", "add board", "edit board", "delete board", "back to start", "exit");
+    private final UserService userService;
+    private final BoardService boardService;
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     User user;
 
@@ -46,7 +45,7 @@ public class TerminalService {
                     chooseCommand(command);
                 }
             }
-            catch (ArrayIndexOutOfBoundsException e){
+            catch (IndexOutOfBoundsException e){
                 System.out.println("Invalid command. Try again");
             }
         }
@@ -71,6 +70,11 @@ public class TerminalService {
             case "delete board" : {
                 deleteBoard();
                 menu("Boards manager", boardsMenu);
+            }
+            case "edit board" : {
+                editBoard();
+                menu("Boards manager", boardsMenu);
+
             }
         }
     }
@@ -122,6 +126,7 @@ public class TerminalService {
             for (Board board : boards) {
                 System.out.println(board.toString());
             }
+            System.out.println();
         }
         else{
             System.out.println("Empty :( You haven't added any boards yet");
@@ -134,19 +139,46 @@ public class TerminalService {
         System.out.println("Board name:");
         String name = br.readLine();
         System.out.println("Is this your favourite board? Type \"true\" or \"false\"");
-        Boolean favourite = Boolean.valueOf(br.readLine());
-        boardService.addNewBoard(name, favourite, user.getId());
+        Boolean isFavourite = Boolean.valueOf(br.readLine());
+        boardService.addNewBoard(name, isFavourite, user.getId());
     }
 
+    //TODO refactoring
     @SneakyThrows
     private void deleteBoard() {
-        List boards = boardService.showUserBoards(user.getId());
-        for (int i = 0; i < boards.size(); i++) {
-            System.out.println(i+1 + " - " + boards.get(i).toString());
+        try {
+            List<Board> boards = boardService.showUserBoards(user.getId());
+            for (int i = 0; i < boards.size(); i++) {
+                System.out.println(i+1 + " - " + boards.get(i).toString());
+            }
+            System.out.println("Which board do you want to remove?");
+            boardService.deleteBoard(boards.get(Integer.parseInt(br.readLine())).getId());
+            printUserBoards();
         }
-        System.out.println("which board do you want to remove?");
-        boardService.deleteBoard(Integer.parseInt(br.readLine()));
-        printUserBoards();
+        catch (IndexOutOfBoundsException e){
+            System.out.println("Invalid command. Try again");
+        }
+    }
 
+    //TODO refactoring
+    @SneakyThrows
+    private void editBoard(){
+        try {
+            List<Board> boards = boardService.showUserBoards(user.getId());
+            for (int i = 0; i < boards.size(); i++) {
+                System.out.println(i+1 + " - " + boards.get(i).toString());
+            }
+            System.out.println("Which board do you want edit?");
+            Board board = boards.get(Integer.parseInt(br.readLine()));
+            System.out.println("Insert new name");
+            String newName = br.readLine();
+            System.out.println("Is this your favourite board? Type \"true\" or \"false\"");
+            Boolean isFavourite = Boolean.valueOf(br.readLine());
+            boardService.editBoard(board.getId(), newName, isFavourite);
+            printUserBoards();
+        }
+        catch (IndexOutOfBoundsException e){
+            System.out.println("Invalid command. Try again");
+        }
     }
 }
