@@ -4,6 +4,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.levelup.trello.model.User;
 
 import java.util.Properties;
 
@@ -23,8 +24,8 @@ public class HibernateUtils {
         // oracle.jdbc.OracleDriver
         hibernateProperties.setProperty("hibernate.connection.driver_class", "org.postgresql.Driver");
 
-        hibernateProperties.setProperty("show_sql", "true");
-        hibernateProperties.setProperty("format_sql", "true");
+        hibernateProperties.setProperty("hibernate.show_sql", "true");
+        hibernateProperties.setProperty("hibernate.format_sql", "true");
 
         // validate
         // update
@@ -38,6 +39,7 @@ public class HibernateUtils {
 
         Configuration configuration = new Configuration();
         return configuration
+                .addAnnotatedClass(User.class)
                 .buildSessionFactory(registry);
     }
 
