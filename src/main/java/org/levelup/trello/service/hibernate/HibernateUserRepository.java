@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.levelup.trello.model.User;
+import org.levelup.trello.model.UserCredentials;
 import org.levelup.trello.service.UserRepository;
 
 import java.util.List;
@@ -28,7 +29,14 @@ public class HibernateUserRepository implements UserRepository {
 
             Transaction tx = session.beginTransaction(); // начинаем транзакцию
 
-            User user = new User(null, name, login, email); // new User(name, login, email);
+            User user = new User(name, login, email); // new User(name, login, email);
+
+            UserCredentials userCredentials = new UserCredentials();
+            userCredentials.setPassword(password);
+
+            userCredentials.setUser(user);
+            user.setCredentials(userCredentials);
+
             session.persist(user); // добавление пользователя в табличку users -> insert into users () values (....)
 
             tx.commit(); // фиксируем наши изменения

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -41,8 +41,7 @@ public class User {
     private String email;
     @OneToMany(mappedBy = "owner") // mappedBy прописывается только в случае bidirectional связи
     private Collection<Board> boards;
-    @OneToOne
-    @MapsId
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserCredentials credentials;
     @ManyToMany
     @JoinTable(
@@ -61,4 +60,9 @@ public class User {
         this.teams = new ArrayList<>();
     }
 
+    public User(String name, String login, String email) {
+        this.name = name;
+        this.login = login;
+        this.email = email;
+    }
 }
